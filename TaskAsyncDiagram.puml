@@ -1,0 +1,18 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+Client -> TaskController: POST /tasks (создание задачи)
+TaskController -> TaskService: createTask(description)
+TaskService -> TaskRepository: save(task)
+TaskRepository --> TaskService: task (сохраненная задача)
+TaskService -> ExecutorService: submit(task)
+ExecutorService -> TaskService: processTask(task)
+TaskService -> TaskMonitor: startMonitoring()
+TaskMonitor -> TaskRepository: getTasks()
+TaskRepository --> TaskMonitor: tasks (список задач)
+TaskService --> TaskController: Ответ (задача создана)
+TaskController --> Client: 200 OK (задача принята)
+
+@enduml
